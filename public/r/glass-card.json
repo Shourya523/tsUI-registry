@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "glass-card",
+  "title": "Glass Card",
+  "description": "A glassmorphism card component with nested slots.",
+  "dependencies": [
+    "class-variance-authority",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "registry/ts-UI/ui/glass-card.tsx",
+      "content": "import { cn } from \"@/lib/utils\"\r\nimport { cva } from \"class-variance-authority\"\r\nimport * as React from \"react\"\r\n\r\nconst GlassCardVariants=cva(\r\n    \"relative overflow-hidden flex flex-col gap-6 rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-transparent text-white p-6 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_0_0_1px_rgba(255,255,255,0.1)] before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)] after:absolute after:inset-0 after:-z-20 after:bg-black/20\",\r\n    {\r\n        variants:{\r\n            \r\n        }\r\n\r\n})\r\nfunction GlassCard({className,children,...props}:React.ComponentProps<\"div\">){\r\n    return (\r\n        <div \r\n        data-slot=\"glass-card\"\r\n        className={cn(\r\n            \"relative overflow-hidden flex flex-col gap-6 rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-transparent text-white p-6 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_0_0_1px_rgba(255,255,255,0.1)] before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)] after:absolute after:inset-0 after:-z-20 after:bg-black/20\",\r\n            className\r\n        )}{...props}>\r\n          {children}\r\n        </div>\r\n    )\r\n}\r\n\r\nfunction GlassCardHeader({ className,...props}:React.ComponentProps<\"div\">){\r\n    return(\r\n        <div data-slot=\"glass-card-header\"\r\n        className={cn(\r\n            \"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 pb-6 border-b border-white/10 has-data-[slot=card-action]:grid-cols-[1fr_auto] relative after:absolute after:bottom-0 after:left-6 after:right-6 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent\"\r\n            ,className\r\n        )}\r\n        {...props}/>\r\n    )\r\n}\r\n\r\nfunction GlassCardTitle({className,...props}:React.ComponentProps<\"div\">){\r\n    return(\r\n        <div\r\n        data-slot=\"glass-card-title\"\r\n        className={cn(\"text-xl font-semibold leading-none tracking-tight text-white/90 drop-shadow-sm\", \r\n            className )}{...props}/>\r\n    )\r\n}\r\nfunction GlassCardDescription({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"glass-card-description\"\r\n      className={cn(\"text-sm text-white/50\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction GlassCardContent({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"glass-card-content\"\r\n      className={cn(\"px-6\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction GlassCardFooter({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"glass-card-footer\"\r\n      className={cn(\"flex items-center px-6 pt-0\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nexport { \r\n  GlassCard, \r\n  GlassCardHeader, \r\n  GlassCardTitle, \r\n  GlassCardDescription, \r\n  GlassCardContent, \r\n  GlassCardFooter \r\n}",
+      "type": "registry:component"
+    }
+  ],
+  "type": "registry:ui"
+}

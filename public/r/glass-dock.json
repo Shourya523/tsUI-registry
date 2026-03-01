@@ -1,0 +1,48 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "glass-dock",
+  "dependencies": [
+    "motion",
+    "lucide-react",
+    "class-variance-authority",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "registryDependencies": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "registry/ts-UI/blocks/glass-dock/glass-dock.tsx",
+      "content": "\"use client\"\r\n\r\nimport { useRef, useEffect, useState } from \"react\"\r\nimport { motion, useMotionValue, useSpring, useTransform, type MotionValue } from \"motion/react\"\r\nimport { cn } from \"@/lib/utils\"\r\nimport { type LucideIcon } from \"lucide-react\"\r\nimport { GlassContainer } from \"@/registry/ts-UI/ui/glass-container\"\r\nimport { Button } from \"@/registry/ts-UI/ui/button\"\r\n\r\ninterface DockItem {\r\n  label: string\r\n  icon: LucideIcon\r\n  onClick: () => void\r\n}\r\n\r\ninterface GlassDockProps {\r\n  items: DockItem[]\r\n  className?: string\r\n}\r\n\r\nexport const GlassDock = ({ items, className }: GlassDockProps) => {\r\n  const mouseX = useMotionValue(Infinity)\r\n  const [mounted, setMounted] = useState(false)\r\n\r\n  useEffect(() => {\r\n    setMounted(true)\r\n  }, [])\r\n\r\n  if (!mounted) return null\r\n\r\n  return (\r\n    <div className=\"absolute bottom-4 left-0 right-0 flex justify-center z-30 px-4 pointer-events-none\">\r\n      <GlassContainer \r\n        variant=\"default\"\r\n        className={cn(\r\n          \"flex flex-row items-center gap-3 p-2 rounded-[50px] w-fit h-16 border-white/10 shadow-2xl pointer-events-auto\", \r\n          className\r\n        )}\r\n        onMouseMove={(e) => mouseX.set(e.clientX)}\r\n        onMouseLeave={() => mouseX.set(Infinity)}\r\n      >\r\n        {items.map((item, index) => (\r\n          <IconItem key={index} mouseX={mouseX} item={item} />\r\n        ))}\r\n      </GlassContainer>\r\n    </div>\r\n  )\r\n}\r\n\r\nfunction IconItem({ mouseX, item }: { mouseX: MotionValue<number>, item: DockItem }) {\r\n  const ref = useRef<HTMLDivElement>(null)\r\n  const Icon = item.icon\r\n\r\n  const distance = useTransform(mouseX, (val) => {\r\n    const bounds = ref.current?.getBoundingClientRect() ?? { left: 0, width: 0 }\r\n    return val - (bounds.left + bounds.width / 2)\r\n  })\r\n\r\n  const sizeTransform = useTransform(distance, [-150, 0, 150], [40, 56, 40])\r\n  const size = useSpring(sizeTransform, { \r\n    mass: 0.1, \r\n    stiffness: 150, \r\n    damping: 12 \r\n  })\r\n\r\n  return (\r\n    <motion.div\r\n      ref={ref}\r\n      style={{ width: size, height: size }}\r\n      className=\"flex items-center justify-center relative group\"\r\n    >\r\n      <Button\r\n        size=\"icon\"\r\n        onClick={item.onClick}\r\n        className=\"w-full h-full rounded-full flex items-center justify-center p-0 active:scale-90 transition-all duration-200 relative overflow-hidden border border-white/20 bg-gradient-to-b from-white/15 via-white/10 to-white/5 text-white backdrop-blur-md shadow-lg \r\n        hover:scale-[1.02] hover:backdrop-blur-[25px] active:scale-[0.98] before:absolute before:inset-0 before:bg-gradient-to-tr before:from-transparent before:via-white/5 before:to-transparent before:pointer-events-none hover:bg-white/10\"\r\n      >\r\n        <Icon className=\"w-5 h-5 text-white/80 group-hover:text-white\" />\r\n      </Button>\r\n      \r\n      <div className=\"absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-black/90 border border-white/10 text-white text-[10px] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl\">\r\n        {item.label}\r\n      </div>\r\n    </motion.div>\r\n  )\r\n}",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/ts-UI/ui/glass-container.tsx",
+      "content": "\"use client\"\r\n\r\nimport * as React from \"react\"\r\nimport { cva, type VariantProps } from \"class-variance-authority\"\r\nimport { cn } from \"@/lib/utils\"\r\n\r\nconst glassDockVariants = cva(\r\n  \"relative flex flex-row items-center justify-center gap-3 p-2 w-fit h-16 rounded-[50px] shadow-2xl transition-all duration-300\",\r\n  {\r\n    variants: {\r\n      variant: {\r\n        default: \"\",\r\n        animated: \"\",\r\n      },\r\n    },\r\n    defaultVariants: {\r\n      variant: \"default\",\r\n    },\r\n  }\r\n)\r\n\r\ninterface GlassContainerProps \r\n  extends React.HTMLAttributes<HTMLDivElement>,\r\n    VariantProps<typeof glassDockVariants> {\r\n  children: React.ReactNode\r\n  blur?: number\r\n  opacity?: number\r\n  speed?: number\r\n  colorFrom?: string\r\n  colorTo?: string\r\n}\r\n\r\nexport const GlassContainer = ({\r\n  children,\r\n  className,\r\n  variant,\r\n  blur = 15,\r\n  opacity = 0.08,\r\n  speed = 1,\r\n  colorFrom = \"#ffaa40\",\r\n  colorTo = \"#9c40ff\",\r\n  ...props\r\n}: GlassContainerProps) => {\r\n  return (\r\n    <div\r\n      className={cn(glassDockVariants({ variant, className }))}\r\n      {...props}\r\n    >\r\n      {/* Animated Gradient Border Span - Only visible if variant is 'animated' */}\r\n      {variant === \"animated\" && (\r\n        <span\r\n          className=\"animate-gradient absolute inset-0 block h-full w-full rounded-[inherit] bg-gradient-to-r from-[var(--color-from)] via-[var(--color-to)] to-[var(--color-from)] bg-[length:var(--bg-size)_100%] p-[1px]\"\r\n          style={{\r\n            \"--bg-size\": `${speed * 300}%`,\r\n            \"--color-from\": colorFrom,\r\n            \"--color-to\": colorTo,\r\n            WebkitMask: \"linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)\",\r\n            WebkitMaskComposite: \"destination-out\",\r\n            mask: \"linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)\",\r\n            maskComposite: \"subtract\",\r\n            WebkitClipPath: \"padding-box\",\r\n          } as React.CSSProperties}\r\n        />\r\n      )}\r\n      <div\r\n        className=\"absolute inset-0 -z-10 rounded-[inherit]\"\r\n        style={{\r\n          backdropFilter: `blur(${blur}px)`,\r\n          backgroundColor: `rgba(255, 255, 255, ${opacity})`,\r\n        }}\r\n      />\r\n      <div\r\n        className=\"absolute inset-0 z-0 pointer-events-none rounded-[inherit] border border-white/20\"\r\n        style={{\r\n          background: `linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02)) border-box`,\r\n          WebkitMask: `linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)`,\r\n          WebkitMaskComposite: \"destination-out\",\r\n          maskComposite: \"exclude\",\r\n        }}\r\n      />\r\n      \r\n      <div className=\"relative z-20 flex flex-row items-center gap-3 px-2\">\r\n        {children}\r\n      </div>\r\n    </div>\r\n  )\r\n}",
+      "type": "registry:component"
+    }
+  ],
+  "tailwind": {
+    "config": {
+      "theme": {
+        "extend": {
+          "animation": {
+            "gradient": "gradient 8s linear infinite"
+          },
+          "keyframes": {
+            "gradient": {
+              "0%, 100%": {
+                "background-position": "0% 50%"
+              },
+              "50%": {
+                "background-position": "100% 50%"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "registry:ui"
+}

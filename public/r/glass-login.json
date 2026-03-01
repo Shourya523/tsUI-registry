@@ -1,0 +1,52 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "glass-login",
+  "title": "Glass Login Form",
+  "description": "A glassmorphism login form block with nested glass-card components and Zod validation.",
+  "dependencies": [
+    "zod",
+    "class-variance-authority",
+    "lucide-react",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "registryDependencies": [
+    "button",
+    "input",
+    "label"
+  ],
+  "files": [
+    {
+      "path": "registry/ts-UI/blocks/glass-login/glass-login.tsx",
+      "content": "\"use client\"\r\n\r\nimport * as React from 'react'\r\nimport { z } from \"zod\"\r\nimport { cn } from \"@/lib/utils\"\r\nimport { Button } from \"@/registry/ts-UI/ui/button\"\r\nimport { Input } from \"@/registry/ts-UI/ui/input\"\r\nimport { Label } from \"@/registry/ts-UI/ui/label\"\r\nimport {\r\n    GlassCard,\r\n    GlassCardHeader,\r\n    GlassCardTitle,\r\n    GlassCardDescription,\r\n    GlassCardContent,\r\n    GlassCardFooter\r\n} from \"@/registry/ts-UI/ui/glass-card\"\r\n\r\nconst LoginSchema = z.object({\r\n    username: z.string().min(1, \"Username is required\"),\r\n    email: z.string().email(\"Invalid email address\"),\r\n    password: z.string().min(8, \"Password must be at least 8 characters\")\r\n})\r\n\r\nexport const GlassLogin = () => {\r\n    const [pending, setPending] = React.useState(false)\r\n    const [state, setState] = React.useState({\r\n        success: false,\r\n        errors: {\r\n            username: \"\",\r\n            email: \"\",\r\n            password: \"\",\r\n        },\r\n    })\r\n\r\n    const handleSubmit = React.useCallback(\r\n        async (e: React.FormEvent<HTMLFormElement>) => {\r\n            e.preventDefault()\r\n            setPending(true)\r\n\r\n            const formData = new FormData(e.currentTarget)\r\n            const data = Object.fromEntries(formData.entries())\r\n            const result = LoginSchema.safeParse(data)\r\n\r\n            if (!result.success) {\r\n                const fieldErrors = result.error.flatten().fieldErrors\r\n                setState({\r\n                    success: false,\r\n                    errors: {\r\n                        username: fieldErrors.username?.[0] ?? \"\",\r\n                        email: fieldErrors.email?.[0] ?? \"\",\r\n                        password: fieldErrors.password?.[0] ?? \"\",\r\n                    },\r\n                })\r\n                setPending(false)\r\n                return\r\n            }\r\n\r\n            await new Promise((resolve) => setTimeout(resolve, 1500))\r\n            setState({ success: true, errors: { username: \"\", email: \"\", password: \"\" } })\r\n            setPending(false)\r\n        },\r\n        []\r\n    )\r\n\r\n    return (\r\n            <GlassCard className=\"w-full max-w-md shadow-2xl\">\r\n                <GlassCardHeader>\r\n                    <GlassCardTitle>Login</GlassCardTitle>\r\n                    <GlassCardDescription>\r\n                        Enter your credentials to access your account.\r\n                    </GlassCardDescription>\r\n                </GlassCardHeader>\r\n                \r\n                <form onSubmit={handleSubmit}>\r\n                    <GlassCardContent className=\"space-y-4\">\r\n                        <div className=\"space-y-2\">\r\n                            <Label htmlFor=\"username\" className=\"text-white/70\">Username</Label>\r\n                            <Input\r\n                                id=\"username\"\r\n                                name=\"username\"\r\n                                placeholder=\"johndoe\"\r\n                                disabled={pending}\r\n                            />\r\n                            {state.errors.username && (\r\n                                <p className=\"text-xs text-red-400/80\">{state.errors.username}</p>\r\n                            )}\r\n                        </div>\r\n                        <div className=\"space-y-2\">\r\n                            <Label htmlFor=\"email\" className=\"text-white/70\">Email</Label>\r\n                            <Input\r\n                                id=\"email\"\r\n                                name=\"email\"\r\n                                type=\"email\"\r\n                                placeholder=\"m@example.com\"\r\n                                disabled={pending}\r\n                            />\r\n                            {state.errors.email && (\r\n                                <p className=\"text-xs text-red-400/80\">{state.errors.email}</p>\r\n                            )}\r\n                        </div>\r\n                        <div className=\"space-y-2\">\r\n                            <Label htmlFor=\"password\" className=\"text-white/70\">Password</Label>\r\n                            <Input\r\n                                id=\"password\"\r\n                                name=\"password\"\r\n                                type=\"password\"\r\n                                disabled={pending}\r\n                            />\r\n                            {state.errors.password && (\r\n                                <p className=\"text-xs text-red-400/80\">{state.errors.password}</p>\r\n                            )}\r\n                        </div>\r\n                    </GlassCardContent>\r\n                    \r\n                    <GlassCardFooter className=\"mt-6\">\r\n                        <Button\r\n                            type=\"submit\"\r\n                            disabled={pending}\r\n                            className=\"w-full h-full rounded-lg flex items-center justify-center py-3 active:scale-95 transition-all duration-200 relative overflow-hidden border border-white/20 bg-gradient-to-b from-white/15 via-white/10 to-white/5 text-white backdrop-blur-md shadow-lg hover:scale-[1.02] hover:bg-white/10 hover:backdrop-blur-[25px] active:scale-[0.98] active:bg-white/5 before:absolute before:inset-0 before:bg-gradient-to-tr before:from-transparent before:via-white/5 before:to-transparent before:pointer-events-none\"\r\n                        >\r\n                            {pending ? \"Signing in...\" : \"Sign In\"}\r\n                        </Button>\r\n                    </GlassCardFooter>\r\n                </form>\r\n            </GlassCard>\r\n    )\r\n}",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/ts-UI/ui/glass-card.tsx",
+      "content": "import { cn } from \"@/lib/utils\"\r\nimport { cva } from \"class-variance-authority\"\r\nimport * as React from \"react\"\r\n\r\nconst GlassCardVariants=cva(\r\n    \"relative overflow-hidden flex flex-col gap-6 rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-transparent text-white p-6 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_0_0_1px_rgba(255,255,255,0.1)] before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)] after:absolute after:inset-0 after:-z-20 after:bg-black/20\",\r\n    {\r\n        variants:{\r\n            \r\n        }\r\n\r\n})\r\nfunction GlassCard({className,children,...props}:React.ComponentProps<\"div\">){\r\n    return (\r\n        <div \r\n        data-slot=\"glass-card\"\r\n        className={cn(\r\n            \"relative overflow-hidden flex flex-col gap-6 rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-transparent text-white p-6 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_0_0_1px_rgba(255,255,255,0.1)] before:absolute before:inset-0 before:-z-10 before:bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)] after:absolute after:inset-0 after:-z-20 after:bg-black/20\",\r\n            className\r\n        )}{...props}>\r\n          {children}\r\n        </div>\r\n    )\r\n}\r\n\r\nfunction GlassCardHeader({ className,...props}:React.ComponentProps<\"div\">){\r\n    return(\r\n        <div data-slot=\"glass-card-header\"\r\n        className={cn(\r\n            \"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 pb-6 border-b border-white/10 has-data-[slot=card-action]:grid-cols-[1fr_auto] relative after:absolute after:bottom-0 after:left-6 after:right-6 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent\"\r\n            ,className\r\n        )}\r\n        {...props}/>\r\n    )\r\n}\r\n\r\nfunction GlassCardTitle({className,...props}:React.ComponentProps<\"div\">){\r\n    return(\r\n        <div\r\n        data-slot=\"glass-card-title\"\r\n        className={cn(\"text-xl font-semibold leading-none tracking-tight text-white/90 drop-shadow-sm\", \r\n            className )}{...props}/>\r\n    )\r\n}\r\nfunction GlassCardDescription({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"glass-card-description\"\r\n      className={cn(\"text-sm text-white/50\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction GlassCardContent({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"glass-card-content\"\r\n      className={cn(\"px-6\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nfunction GlassCardFooter({ className, ...props }: React.ComponentProps<\"div\">) {\r\n  return (\r\n    <div\r\n      data-slot=\"glass-card-footer\"\r\n      className={cn(\"flex items-center px-6 pt-0\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n\r\nexport { \r\n  GlassCard, \r\n  GlassCardHeader, \r\n  GlassCardTitle, \r\n  GlassCardDescription, \r\n  GlassCardContent, \r\n  GlassCardFooter \r\n}",
+      "type": "registry:component"
+    }
+  ],
+  "tailwind": {
+    "config": {
+      "theme": {
+        "extend": {
+          "animation": {
+            "gradient": "gradient 8s linear infinite"
+          },
+          "keyframes": {
+            "gradient": {
+              "0%, 100%": {
+                "background-position": "0% 50%"
+              },
+              "50%": {
+                "background-position": "100% 50%"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "registry:block"
+}

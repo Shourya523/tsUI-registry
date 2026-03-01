@@ -1,0 +1,226 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "acme",
+  "homepage": "https://acme.com",
+  "items": [
+    {
+      "name": "hello-world",
+      "type": "registry:component",
+      "title": "Hello World",
+      "description": "A simple hello world component",
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "registry/ts-UI/blocks/hello-world/hello-world.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "example-form",
+      "type": "registry:component",
+      "title": "Example Form",
+      "description": "A contact form with Zod validation.",
+      "dependencies": [
+        "zod"
+      ],
+      "registryDependencies": [
+        "button",
+        "input",
+        "label",
+        "textarea",
+        "card"
+      ],
+      "files": [
+        {
+          "path": "registry/ts-UI/blocks/example-form/example-form.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "complex-component",
+      "type": "registry:component",
+      "title": "Complex Component",
+      "description": "A complex component showing hooks, libs and components.",
+      "registryDependencies": [
+        "card"
+      ],
+      "files": [
+        {
+          "path": "registry/ts-UI/blocks/complex-component/page.tsx",
+          "type": "registry:page",
+          "target": "app/pokemon/page.tsx"
+        },
+        {
+          "path": "registry/ts-UI/blocks/complex-component/components/pokemon-card.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/ts-UI/blocks/complex-component/components/pokemon-image.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/ts-UI/blocks/complex-component/lib/pokemon.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/ts-UI/blocks/complex-component/hooks/use-pokemon.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "example-with-css",
+      "type": "registry:component",
+      "title": "Example with CSS",
+      "description": "A login form with a CSS file.",
+      "files": [
+        {
+          "path": "registry/ts-UI/blocks/example-with-css/example-card.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/ts-UI/blocks/example-with-css/example-card.css",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "glass-dock",
+      "type": "registry:ui",
+      "dependencies": [
+        "motion",
+        "lucide-react",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "button"
+      ],
+      "files": [
+        {
+          "path": "registry/ts-UI/blocks/glass-dock/glass-dock.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/ts-UI/ui/glass-container.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "animation": {
+                "gradient": "gradient 8s linear infinite"
+              },
+              "keyframes": {
+                "gradient": {
+                  "0%, 100%": {
+                    "background-position": "0% 50%"
+                  },
+                  "50%": {
+                    "background-position": "100% 50%"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "glass-login",
+      "type": "registry:block",
+      "title": "Glass Login Form",
+      "description": "A glassmorphism login form block with nested glass-card components and Zod validation.",
+      "dependencies": [
+        "zod",
+        "class-variance-authority",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "registryDependencies": [
+        "button",
+        "input",
+        "label"
+      ],
+      "files": [
+        {
+          "path": "registry/ts-UI/blocks/glass-login/glass-login.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/ts-UI/ui/glass-card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "animation": {
+                "gradient": "gradient 8s linear infinite"
+              },
+              "keyframes": {
+                "gradient": {
+                  "0%, 100%": {
+                    "background-position": "0% 50%"
+                  },
+                  "50%": {
+                    "background-position": "100% 50%"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "underline-heading",
+      "type": "registry:component",
+      "title": "Underline Heading",
+      "description": "Animated gradient heading with optional highlighted underline and staggered reveal.",
+      "dependencies": [
+        "motion",
+        "clsx",
+        "tailwind-merge",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ts-UI/blocks/underlined-heading/underlined-heading.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "animation": {
+                "gradient-shift": "gradientShift 6s ease infinite"
+              },
+              "keyframes": {
+                "gradientShift": {
+                  "0%, 100%": {
+                    "background-position": "0% 50%"
+                  },
+                  "50%": {
+                    "background-position": "100% 50%"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
